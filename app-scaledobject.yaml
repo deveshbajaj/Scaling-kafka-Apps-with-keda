@@ -1,0 +1,24 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: kafka-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: kafka-python # Required Name of the deployment we want to scale.
+  pollingInterval: 10
+  minReplicaCount: 0   #Optional Default 0
+  maxReplicaCount: 10  #Optional Default 100
+  advanced:                                          # Optional. Section to specify advanced options
+    restoreToOriginalReplicaCount: true
+  triggers:
+  - type: kafka
+    metadata:
+      # Required
+      bootstrapServers: "localhost:29092"
+      consumerGroup: keda-scalling_group  # Make sure that this consumer group name is the same one as the one that is consuming topics
+      topic: keda-scalling
+      lagThreshold: "10" # Optional. How much the stream is lagging on the current consumer group
+      allowIdleConsumers: false  # This will make sure that , you don't make more consumer than total number of partition.

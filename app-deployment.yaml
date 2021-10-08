@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-python
+spec:
+  selector:
+    matchLabels:
+      app: kafka-python
+  replicas: 0
+  template:
+    metadata:
+      labels:
+        app: kafka-python
+    spec:
+      containers:
+      - name: kafka-python
+        image: kafka:latest
+        imagePullPolicy: Never
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
